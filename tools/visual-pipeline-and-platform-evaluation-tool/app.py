@@ -777,7 +777,7 @@ def create_interface(title: str = "Visual Pipeline and Platform Evaluation Tool"
     # Inferencing channels
     inferencing_channels = gr.Slider(
         minimum=0,
-        maximum=30,
+        maximum=100,
         value=8,
         step=1,
         label="Number of Recording + Inferencing channels",
@@ -788,7 +788,7 @@ def create_interface(title: str = "Visual Pipeline and Platform Evaluation Tool"
     # Recording channels
     recording_channels = gr.Slider(
         minimum=0,
-        maximum=30,
+        maximum=100,
         value=8,
         step=1,
         label="Number of Recording only channels",
@@ -1485,3 +1485,4 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
     )
+
