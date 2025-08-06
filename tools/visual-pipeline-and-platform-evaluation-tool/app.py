@@ -114,7 +114,7 @@ def download_file(url, local_filename):
 # Set video path for the input video player
 def set_video_path(filename):
     if not os.path.exists(os.path.join(TEMP_DIR, filename)):
-        return gr.update(label="Error: Video file not found. Verify the recording URL or proxy settings.", value=None)
+        return gr.update(label="Error: Video file not found. Verify the  URL or proxy settings.", value=None)
     return gr.update(label="Input Video", value=os.path.join(TEMP_DIR, filename))
 
 # Function to check if a click is inside any bounding box
@@ -607,13 +607,13 @@ def on_run(data):
             duration=10,
         )
 
-    recording_channels = arguments.get("recording_channels", 0) or 0
+    _channels = arguments.get("_channels", 0) or 0
     inferencing_channels = arguments.get("inferencing_channels", 0) or 0
     live_preview_enabled = arguments.get("live_preview_enabled", False)
     # Validate channels
-    if recording_channels + inferencing_channels == 0:
+    if _channels + inferencing_channels == 0:
         raise gr.Error(
-            "Please select at least one channel for recording or inferencing.",
+            "Please select at least one channel for  or inferencing.",
             duration=10,
         )
 
@@ -777,7 +777,7 @@ def create_interface(title: str = "Visual Pipeline and Platform Evaluation Tool"
     # Inferencing channels
     inferencing_channels = gr.Slider(
         minimum=0,
-        maximum=100,
+        maximum=64,
         value=8,
         step=1,
         label="Number of Recording + Inferencing channels",
@@ -788,7 +788,7 @@ def create_interface(title: str = "Visual Pipeline and Platform Evaluation Tool"
     # Recording channels
     recording_channels = gr.Slider(
         minimum=0,
-        maximum=100,
+        maximum=64,
         value=8,
         step=1,
         label="Number of Recording only channels",
@@ -1485,4 +1485,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
     )
+
 
