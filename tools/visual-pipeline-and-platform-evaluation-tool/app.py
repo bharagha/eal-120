@@ -607,7 +607,7 @@ def on_run(data):
             duration=10,
         )
 
-    recording_channels = arguments.get("recording_channels ", 0) or 0
+    recording_channels = arguments.get("recording_channels", 0) or 0
     inferencing_channels = arguments.get("inferencing_channels", 0) or 0
     live_preview_enabled = arguments.get("live_preview_enabled", False)
     # Validate channels
@@ -1485,4 +1485,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
     )
+
 
