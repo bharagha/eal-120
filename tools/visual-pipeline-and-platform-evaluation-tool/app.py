@@ -114,7 +114,7 @@ def download_file(url, local_filename):
 # Set video path for the input video player
 def set_video_path(filename):
     if not os.path.exists(os.path.join(TEMP_DIR, filename)):
-        return gr.update(label="Error: Video file not found. Verify the  URL or proxy settings.", value=None)
+        return gr.update(label="Error: Video file not found. Verify the recording URL or proxy settings.", value=None)
     return gr.update(label="Input Video", value=os.path.join(TEMP_DIR, filename))
 
 # Function to check if a click is inside any bounding box
