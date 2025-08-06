@@ -5,19 +5,20 @@ Summary:        Deep Learning Streamer with bundled dependencies
 
 License:        Proprietary
 Source0:        %{name}-%{version}.tar.gz
-Source1:        https://github.com/opencv/opencv/archive/4.10.0.zip
-Source2:        https://github.com/eclipse/paho.mqtt.c/archive/v1.3.4.tar.gz
-Source3:        https://storage.openvinotoolkit.org/repositories/openvino/packages/2025.2/linux/openvino_toolkit_ubuntu24_2025.2.0.19140.c01cd93e24d_x86_64.tgz
-Source4:        https://gitlab.freedesktop.org/gstreamer/gstreamer/-/archive/1.26.1/gstreamer-1.26.1.tar.gz
-Source5:        https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.gz
+Source1:        opencv-4.10.0.tar.gz
+Source2:        paho.mqtt.c-1.3.4.tar.gz
+Source3:        openvino_toolkit_ubuntu24_2025.2.0.19140.c01cd93e24d_x86_64.tgz
+Source4:        gstreamer-1.26.1.tar.gz
+Source5:        ffmpeg-6.1.1.tar.gz
 URL:            https://github.com/open-edge-platform/edge-ai-libraries/tree/release-1.2.0/libraries/dl-streamer
 Packager:       DL Streamer Team <dlstreamer@intel.com>
 ExclusiveArch:  x86_64
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 AutoReqProv:    no
 %define debug_package %{nil}
 %define __os_install_post %{nil}
 
-BuildRequires:  cmake ninja-build gcc gcc-c++ make git python3 python3-pip yasm nasm meson pkgconfig openssl-devel
+BuildRequires:  cmake ninja-build gcc gcc-c++ make git python3 python3-pip yasm nasm meson pkgconfig openssl-devel patchelf
 Requires: glib2-devel
 Requires: libjpeg-turbo
 Requires: libdrm
@@ -56,65 +57,91 @@ Requires: openvino-2025.2.0
 This package contains Intel DL Streamer and all required dependencies built from source.
 
 %prep
-%setup -q
-tar xzf %{SOURCE0}
-unzip %{SOURCE1}
-tar xzf %{SOURCE2}
-tar xzf %{SOURCE3}
-tar xzf %{SOURCE4}
-tar xzf %{SOURCE5}
+%setup -q -n %{name}-%{version}
+%setup -D -T -a 1
+%setup -D -T -a 2
+%setup -D -T -a 3
+%setup -D -T -a 4
+%setup -D -T -a 5
 
 %build
+# Set up build environment
+export DESTDIR=%{buildroot}
+export PREFIX=/opt/intel/dlstreamer
+mkdir -p %{buildroot}$PREFIX
+
 # 1. Build paho-mqtt-c
-pushd 1.3.4
-make
-sudo make install
+pushd paho.mqtt.c-1.3.4
+make PREFIX=$PREFIX
+make install PREFIX=$PREFIX DESTDIR=%{buildroot}
 popd
 
 # 2. Build OpenCV
-pushd 4.10.0
+pushd opencv-4.10.0
 mkdir build
 cd build/
-cmake -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF -GNinja ..
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX/opencv \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_opencv_apps=OFF \
+      -GNinja ..
 ninja -j "$(nproc)"
-sudo env PATH=~/python3venv/bin:$PATH ninja install 
+DESTDIR=%{buildroot} ninja install
 popd
 
 # 3. Build FFmpeg
 pushd ffmpeg-6.1.1
-./configure --enable-pic --enable-shared --enable-static --enable-avfilter --enable-vaapi \
- --extra-cflags="-I/include" --extra-ldflags="-L/lib" --extra-libs=-lpthread --extra-libs=-lm --bindir="/bin"
+./configure --prefix=$PREFIX/ffmpeg \
+            --enable-pic \
+            --enable-shared \
+            --enable-static \
+            --enable-avfilter \
+            --enable-vaapi \
+            --extra-cflags="-I$PREFIX/include" \
+            --extra-ldflags="-L$PREFIX/lib" \
+            --extra-libs=-lpthread \
+            --extra-libs=-lm
 make -j "$(nproc)"
-sudo make install
+make install DESTDIR=%{buildroot}
 popd
 
 # 4. Build GStreamer 
 pushd gstreamer-1.26.1
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-sudo ldconfig
-meson setup -Dexamples=disabled -Dtests=disabled -Dvaapi=enabled -Dgst-examples=disabled --buildtype=release --prefix=/opt/intel/dlstreamer/gstreamer --libdir=lib/ --libexecdir=bin/ build/
+export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH
+meson setup -Dexamples=disabled \
+            -Dtests=disabled \
+            -Dvaapi=enabled \
+            -Dgst-examples=disabled \
+            --buildtype=release \
+            --prefix=$PREFIX/gstreamer \
+            --libdir=lib \
+            --libexecdir=bin \
+            build/
 ninja -C build
-sudo env PATH=~/python3venv/bin:$PATH meson install -C build/
+DESTDIR=%{buildroot} meson install -C build/
 popd
 
 # 5. Build DL Streamer with locally built dependencies
 pushd %{name}-%{version}
 mkdir build
 cd build
-export PKG_CONFIG_PATH="/opt/intel/dlstreamer/gstreamer/lib/pkgconfig:${PKG_CONFIG_PATH}"
-source /opt/intel/openvino_2025/setupvars.sh
-cmake -DENABLE_PAHO_INSTALLATION=ON -DENABLE_RDKAFKA_INSTALLATION=ON -DENABLE_VAAPI=ON -DENABLE_SAMPLES=ON ..
+export PKG_CONFIG_PATH="$PREFIX/gstreamer/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# Note: OpenVINO setup would need to be handled differently in a proper RPM build
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX \
+      -DENABLE_PAHO_INSTALLATION=ON \
+      -DENABLE_RDKAFKA_INSTALLATION=ON \
+      -DENABLE_VAAPI=ON \
+      -DENABLE_SAMPLES=ON ..
 make -j "$(nproc)"
+make install DESTDIR=%{buildroot}
+popd
 
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}/opt
-mkdir -p %{buildroot}/usr
-
-cp -a opt/* %{buildroot}/opt/
-
-# Remove RPATH for all binaries/libs
+# Build root is already populated by DESTDIR installs in %build section
+# Just need to remove RPATH for all binaries/libs
 find %{buildroot} -type f \( -name "*.so*" -o -perm -111 \) | while read -r file; do
     if patchelf --print-rpath "$file" &>/dev/null; then
         rpath=$(patchelf --print-rpath "$file")
@@ -125,15 +152,16 @@ find %{buildroot} -type f \( -name "*.so*" -o -perm -111 \) | while read -r file
     fi
 done
 
+%clean
+rm -rf %{buildroot}
+
 %check
 # Optional: Add test commands here
 
 %files
+%defattr(-,root,root,-)
 %license LICENSE
 /opt/intel/dlstreamer/
-/opt/opencv/
-/opt/rdkafka/
-/opt/ffmpeg/
 
 
 %changelog
