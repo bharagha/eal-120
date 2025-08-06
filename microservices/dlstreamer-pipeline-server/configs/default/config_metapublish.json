@@ -1,0 +1,13 @@
+{
+    "config": {
+        "pipelines": [
+            {
+                "name": "unequal_fps_pipeline",
+                "source": "gstreamer",
+                "queue_maxsize": 50,
+                "pipeline": "multifilesrc location=/home/pipeline-server/resources/samples/road_barrier_1920_1080.h264 loop=true ! parsebin ! vah264dec ! vapostproc ! video/x-raw(memory:VAMemory) ! queue ! gvadetect model-instance-id=inst0 batch-size=8 inference-interval=3 threshold=0.724 model=/home/pipeline-server/resources/dlsps/models/object_detection/yolov5m-640_INT8/FP16/yolov5m-640_INT8.xml model-proc=/home/pipeline-server/resources/dlsps/models/object_detection/yolov5m-640_INT8/yolo-v5.json pre-process-backend=va-surface-sharing device=GPU name=detection ! queue ! gvatrack tracking-type=2 name=tracking ! queue ! gvaclassify batch-size=8 model-instance-id=inst1 model=/home/pipeline-server/resources/dlsps/models/classification/resnet50/FP16/resnet-50-pytorch.xml model-proc=/home/pipeline-server/resources/dlsps/models/classification/resnet50/resnet-50-pytorch.model_proc.json pre-process-backend=va-surface-sharing device=GPU name=classification ! queue ! gvainference batch-size=8 inference-region=1 model-instance-id=inst2 model=/home/pipeline-server/resources/dlsps/models/extraction/fe-pytorch/FP16/fe-pytorch-0.0.1.xml pre-process-backend=va-surface-sharing device=GPU name=extraction ! gvametaconvert add-empty-results=true name=metaconvert ! gvametapublish name=destination ! queue ! gvafpscounter ! appsink name=appsink",
+                "auto_start": false
+            }
+        ]
+    }
+}

@@ -13,5 +13,13 @@ curl localhost:8080/pipelines/user_defined_pipelines/unequal_fps_pipeline -X POS
 	}
 }'
 
-
 rtsp://10.223.24.30:8554/ufp
+
+###################################
+
+curl localhost:8080/pipelines/user_defined_pipelines/unequal_fps_pipeline -X POST -H 'Content-Type: application/json' -d '{}'
+
+####################################
+
+./run_curl_n_times.sh 25
+
