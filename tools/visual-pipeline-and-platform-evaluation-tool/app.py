@@ -607,13 +607,13 @@ def on_run(data):
             duration=10,
         )
 
-    _channels = arguments.get("_channels", 0) or 0
+    recording_channels = arguments.get("recording_channels ", 0) or 0
     inferencing_channels = arguments.get("inferencing_channels", 0) or 0
     live_preview_enabled = arguments.get("live_preview_enabled", False)
     # Validate channels
-    if _channels + inferencing_channels == 0:
+    if recording_channels + inferencing_channels == 0:
         raise gr.Error(
-            "Please select at least one channel for  or inferencing.",
+            "Please select at least one channel for recording or inferencing.",
             duration=10,
         )
 
@@ -1485,3 +1485,4 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
     )
+
