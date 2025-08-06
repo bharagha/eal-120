@@ -1,0 +1,17 @@
+curl localhost:8080/pipelines/user_defined_pipelines/unequal_fps_pipeline -X POST -H 'Content-Type: application/json' -d '{
+	"destination": {
+		"metadata": {
+			"type": "file",
+			"path": "/tmp/results.jsonl",
+			"format": "json-lines"
+		},
+        "frame": {
+            "type": "rtsp",
+            "path": "ufp",
+			"overlay": true
+        }
+	}
+}'
+
+
+rtsp://10.223.24.30:8554/ufp
