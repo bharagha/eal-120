@@ -15,7 +15,7 @@ The Document Summarization sample application uses AI models to summarize docume
 
 The following figure shows the microservices required to implement the Document Summarization sample application.
 
-![Technical Architecture Diagram of Document Summarization](.docs/user-guide/images/DocSum-Arch.png)
+![Technical Architecture Diagram of Document Summarization](./docs/user-guide/images/DocSum-Arch.png)
 
 The components are as follows:
 
@@ -41,7 +41,7 @@ The components are as follows:
     - **Configuration:** Loads models from a mounted volume.
     - **Ports:** `9300` (gRPC), `8300` (REST)
 
-For more details on Architecture, see [How it works](docs/user-guide/how-it-works.md).
+For more details on Architecture, see [How it works](docs/user-guide/overview-architecture.md).
 
 ## Learn More
 
