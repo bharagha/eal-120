@@ -45,7 +45,6 @@ For more details on Architecture, see [How it works](docs/user-guide/overview-ar
 
 ## Learn More
 
-- **Overview**
   - [Overview](docs/user-guide/Overview.md): A high-level introduction.
   - [Overview Architecture](docs/user-guide/overview-architecture.md): Detailed architecture.
   - [How to Build from Source](docs/user-guide/build-from-source.md): Instructions for building from source code.
