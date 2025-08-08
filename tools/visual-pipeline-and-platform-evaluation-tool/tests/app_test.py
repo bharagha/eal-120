@@ -28,7 +28,7 @@ class TestApp(unittest.TestCase):
         )
         with mock.patch(
             "builtins.open", mock.mock_open(read_data=mock_data)
-        ) as mock_file:
+        ):
             result = read_latest_metrics()
             expected = [1.0 for _ in range(12)] + [None for _ in range(8)]
             self.assertEqual(result, expected)
@@ -51,7 +51,7 @@ class TestApp(unittest.TestCase):
         )
         with mock.patch(
             "builtins.open", mock.mock_open(read_data=mock_data)
-        ) as mock_file:
+        ):
             result = read_latest_metrics()
             expected = [None for _ in range(20)]
             self.assertEqual(result, expected)

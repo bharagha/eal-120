@@ -1,13 +1,11 @@
 import json
 import logging
-import math
 import os
 import random
 import shutil
 import subprocess
 import tempfile
 
-from PIL import Image, ImageOps
 
 from composite_generator import create_composite_frames
 

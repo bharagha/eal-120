@@ -174,7 +174,7 @@ def read_latest_metrics(target_ns: int = None):
                     if field.startswith("usage_user="):
                         try:
                             cpu_user = float(field.split("=")[1])
-                        except:
+                        except (ValueError, IndexError):
                             pass
 
         if mem_used_percent is None and "mem" in line:
@@ -184,7 +184,7 @@ def read_latest_metrics(target_ns: int = None):
                     if field.startswith("used_percent="):
                         try:
                             mem_used_percent = float(field.split("=")[1])
-                        except:
+                        except (ValueError, IndexError):
                             pass
 
         # Only consider GPU-related metrics for gpu_id=1
@@ -192,14 +192,14 @@ def read_latest_metrics(target_ns: int = None):
             parts = line.split()
             try:
                 gpu_package_power = float(parts[1].split("=")[1])
-            except:
+            except (ValueError, IndexError):
                 pass
 
         if gpu_power is None and "gpu_cur_power" in line and "gpu_id=1" in line:
             parts = line.split()
             try:
                 gpu_power = float(parts[1].split("=")[1])
-            except:
+            except (ValueError, IndexError):
                 pass
 
         if core_temp is None and "temp" in line:
@@ -209,7 +209,7 @@ def read_latest_metrics(target_ns: int = None):
                     if "temp" in field:
                         try:
                             core_temp = float(field.split("=")[1])
-                        except:
+                        except (ValueError, IndexError):
                             pass
 
         if gpu_freq is None and "gpu_frequency" in line and "gpu_id=1" in line:
@@ -217,7 +217,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("value="):
                     try:
                         gpu_freq = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if cpu_freq is None and "cpu_frequency_avg" in line:
@@ -225,7 +225,7 @@ def read_latest_metrics(target_ns: int = None):
                 parts = [part for part in line.split() if "frequency=" in part]
                 if parts:
                     cpu_freq = float(parts[0].split("=")[1])
-            except:
+            except (ValueError, IndexError):
                 pass
 
         if gpu_render is None and "engine=render" in line and "gpu_id=1" in line:
@@ -233,7 +233,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_render = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_copy is None and "engine=copy" in line and "gpu_id=1" in line:
@@ -241,7 +241,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_copy = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_ve is None and "engine=video-enhance" in line and "gpu_id=1" in line:
@@ -249,7 +249,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_ve = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if (
@@ -262,7 +262,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_video = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_compute is None and "engine=compute" in line and "gpu_id=1" in line:
@@ -270,7 +270,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_compute = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         # GPU 0 metrics (new variables)
@@ -282,14 +282,14 @@ def read_latest_metrics(target_ns: int = None):
             parts = line.split()
             try:
                 gpu_package_power_0 = float(parts[1].split("=")[1])
-            except:
+            except (ValueError, IndexError):
                 pass
 
         if gpu_power_0 is None and "gpu_cur_power" in line and "gpu_id=0" in line:
             parts = line.split()
             try:
                 gpu_power_0 = float(parts[1].split("=")[1])
-            except:
+            except (ValueError, IndexError):
                 pass
 
         if gpu_freq_0 is None and "gpu_frequency" in line and "gpu_id=0" in line:
@@ -297,7 +297,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("value="):
                     try:
                         gpu_freq_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_render_0 is None and "engine=render" in line and "gpu_id=0" in line:
@@ -305,7 +305,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_render_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_copy_0 is None and "engine=copy" in line and "gpu_id=0" in line:
@@ -313,7 +313,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_copy_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_ve_0 is None and "engine=video-enhance" in line and "gpu_id=0" in line:
@@ -321,7 +321,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_ve_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if (
@@ -334,7 +334,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_video_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if gpu_compute_0 is None and "engine=compute" in line and "gpu_id=0" in line:
@@ -342,7 +342,7 @@ def read_latest_metrics(target_ns: int = None):
                 if part.startswith("usage="):
                     try:
                         gpu_compute_0 = float(part.split("=")[1])
-                    except:
+                    except (ValueError, IndexError):
                         pass
 
         if all(
