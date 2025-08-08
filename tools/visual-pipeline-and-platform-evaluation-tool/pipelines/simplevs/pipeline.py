@@ -48,7 +48,7 @@ class SimpleVideoStructurizationPipeline(GstPipeline):
         )
 
         self._inference_output_stream = (
-            "{encoder} ! h264parse ! mp4mux ! filesink   location={VIDEO_OUTPUT_PATH} "
+            "{encoder} ! h264parse ! mp4mux ! filesink location={VIDEO_OUTPUT_PATH} "
         )
 
         # Add shmsink for live preview (shared memory)
