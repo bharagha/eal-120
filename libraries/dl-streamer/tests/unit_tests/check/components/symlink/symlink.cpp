@@ -123,6 +123,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Running Components::symlink_test from " << __FILE__ << std::endl;
     try {
         testing::InitGoogleTest(&argc, argv);
+        return RUN_ALL_TESTS();
     } catch (const std::exception &e) {
         std::cerr << "Caught std::exception in " << __FILE__ << " at line " << __LINE__ << " in function "
                   << __FUNCTION__ << std::endl;
@@ -134,5 +135,4 @@ int main(int argc, char *argv[]) {
         std::cerr << "Context: Failed during GoogleTest initialization with unknown exception type" << std::endl;
         return 1;
     }
-    return RUN_ALL_TESTS();
 }
