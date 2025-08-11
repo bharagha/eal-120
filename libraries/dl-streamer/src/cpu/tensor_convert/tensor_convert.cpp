@@ -18,11 +18,11 @@ class TensorConvert : public BaseTransform {
 
     FrameInfoVector get_input_info() override {
         if (_output_info.tensors.empty())
-            return tensor_convert.input_info;
+            return tensor_convert.input_info();
         if (_output_info.tensors[0].dtype != DataType::UInt8)
             return {};
         if (ImageInfo(_output_info.tensors[0]).layout() == ImageLayout::Any) {
-            return tensor_convert.input_info;
+            return tensor_convert.input_info();
         } else {
             auto image_format_vector = tensor_info_to_image_format_vector(_output_info.tensors[0]);
             FrameInfoVector ret;
@@ -38,7 +38,7 @@ class TensorConvert : public BaseTransform {
 
     FrameInfoVector get_output_info() override {
         if (_input_info.tensors.empty()) {
-            return tensor_convert.output_info;
+            return tensor_convert.output_info();
         } else {
             FrameInfo info = _input_info;
             info.media_type = MediaType::Tensors;
@@ -100,15 +100,15 @@ ElementDesc tensor_convert = {.name = "tensor_convert",
                               .author = "Intel Corporation",
                               .params = nullptr,
                               .input_info =
-                                  {
+                                  MAKE_FRAME_INFO_VECTOR({
                                       FrameInfo(ImageFormat::RGB, MemoryType::Any),
                                       FrameInfo(ImageFormat::BGR, MemoryType::Any),
                                       FrameInfo(ImageFormat::RGBX, MemoryType::Any),
                                       FrameInfo(ImageFormat::BGRX, MemoryType::Any),
                                       FrameInfo(ImageFormat::RGBP, MemoryType::Any),
                                       FrameInfo(ImageFormat::BGRP, MemoryType::Any),
-                                  },
-                              .output_info = {FrameInfo(MediaType::Tensors, MemoryType::Any, {{{}, DataType::UInt8}})},
+                                  }),
+                              .output_info = MAKE_FRAME_INFO_VECTOR({FrameInfo(MediaType::Tensors, MemoryType::Any, {{{}, DataType::UInt8}})}),
                               .create = create_element<TensorConvert>,
                               .flags = 0};
 }

@@ -60,8 +60,8 @@ ElementDesc tensor_sliding_window = {.name = "tensor_sliding_window",
                                      .description = "Sliding aggregation of input tensors",
                                      .author = "Intel Corporation",
                                      .params = nullptr,
-                                     .input_info = {{MediaType::Tensors, MemoryType::Any}},
-                                     .output_info = {{MediaType::Tensors, MemoryType::CPU}},
+                                     .input_info = MAKE_FRAME_INFO_VECTOR({{MediaType::Tensors, MemoryType::Any}}),
+                                     .output_info = MAKE_FRAME_INFO_VECTOR({{MediaType::Tensors, MemoryType::CPU}}),
                                      .create = create_element<TensorSlidingWindow>,
                                      .flags = 0};
 }

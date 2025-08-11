@@ -80,8 +80,8 @@ ElementDesc vaapi_to_opencl = {
     .description = "Convert memory:VASurface to memory:OpenCL",
     .author = "Intel Corporation",
     .params = nullptr,
-    .input_info = {{MediaType::Image, MemoryType::VAAPI}, {MediaType::Tensors, MemoryType::VAAPI}},
-    .output_info = {{MediaType::Tensors, MemoryType::OpenCL}},
+    .input_info = MAKE_FRAME_INFO_VECTOR({{MediaType::Image, MemoryType::VAAPI}, {MediaType::Tensors, MemoryType::VAAPI}}),
+    .output_info = MAKE_FRAME_INFO_VECTOR({{MediaType::Tensors, MemoryType::OpenCL}}),
     .create = create_element<VAAPIToOpenCL>,
     .flags = 0};
 }

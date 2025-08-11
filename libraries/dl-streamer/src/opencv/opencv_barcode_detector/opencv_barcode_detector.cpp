@@ -136,8 +136,8 @@ ElementDesc opencv_barcode_detector = {.name = "opencv_barcode_detector",
                                        .description = "Detect Barcodes using openCV",
                                        .author = "Intel Corporation",
                                        .params = &params_desc,
-                                       .input_info = {MediaType::Image},
-                                       .output_info = {MediaType::Image},
+                                       .input_info = MAKE_FRAME_INFO_VECTOR({MediaType::Image}),
+                                       .output_info = MAKE_FRAME_INFO_VECTOR({MediaType::Image}),
                                        .create = create_element<OpencvBarcodeDetector>,
                                        .flags = 0};
 }

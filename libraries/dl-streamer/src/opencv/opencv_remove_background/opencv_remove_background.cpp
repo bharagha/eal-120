@@ -114,19 +114,19 @@ ElementDesc opencv_remove_background = {.name = "opencv_remove_background",
                                         .author = "Intel Corporation",
                                         .params = &params_desc,
                                         .input_info =
-                                            {
+                                            MAKE_FRAME_INFO_VECTOR({
                                                 {ImageFormat::RGB},
                                                 {ImageFormat::BGR},
                                                 {ImageFormat::RGBX},
                                                 {ImageFormat::BGRX},
-                                            },
+                                            }),
                                         .output_info =
-                                            {
+                                            MAKE_FRAME_INFO_VECTOR({
                                                 {ImageFormat::RGB},
                                                 {ImageFormat::BGR},
                                                 {ImageFormat::RGBX},
                                                 {ImageFormat::BGRX},
-                                            },
+                                            }),
                                         .create = create_element<OpencvRemoveBackground>,
                                         .flags = 0};
 }
