@@ -51,7 +51,6 @@ void Tracklet::RenewTrajectory(const cv::Rect2f &bounding_box) {
 
 #define ROUND_F(value, scale) (round((value) * (scale)) / (scale))
 
-
 std::string Tracklet::Serialize() const {
 #ifdef DUMP_OTAV
     DEFINE_STRING_VAR(s_id, id);
