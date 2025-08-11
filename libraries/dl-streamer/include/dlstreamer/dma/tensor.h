@@ -17,7 +17,7 @@ namespace dlstreamer {
 namespace tensor::key {
 static constexpr auto dma_fd = "dma_fd";             // (int)
 static constexpr auto drm_modifier = "drm_modifier"; // (int)
-};                                                   // namespace tensor::key
+}; // namespace tensor::key
 
 class DMATensor : public BaseTensor {
   public:

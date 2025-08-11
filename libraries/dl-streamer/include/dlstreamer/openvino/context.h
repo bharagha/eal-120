@@ -13,8 +13,6 @@
 #include <openvino/runtime/intel_gpu/properties.hpp>
 #include <openvino/runtime/intel_gpu/remote_properties.hpp>
 
-//#include <openvino/runtime/intel_gpu/ocl/va.hpp>
-
 namespace dlstreamer {
 
 class OpenVINOContext : public BaseContext {
