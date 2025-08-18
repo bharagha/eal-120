@@ -15,6 +15,7 @@ This page provides detailed hardware, software, and platform requirements to hel
 ## Operating Systems used for validation
 - Ubuntu 22.04.2 LTS for Xeon® only configurations.
 - If GPU is available, refer to the official [documentation](https://dgpu-docs.intel.com/devices/hardware-table.html) for details on required kernel version. For the listed hardware platforms, the kernel requirement translates to Ubuntu 24.04 or Ubuntu 24.10 depending on the GPU used.
+- Validation on EMT 3.0 has been done. 
 
 ## Minimum Configuration
 The recommended minimum configuration depends on the model serving used.
